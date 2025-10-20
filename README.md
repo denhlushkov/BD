@@ -57,7 +57,82 @@
 
 9.Пацієнт не може бути записаний на два сеанси, що перетинаються за часом.
 
+Діаграма ER
 <img width="827" height="965" alt="image" src="https://github.com/user-attachments/assets/36086942-55e6-4544-9a1d-2553633baec3" />
+
+Опис Сутностей ER-Діаграми Клініки:
+1. Therapist (Терапевт)
+Атрибути:
+- therapist_id (PK)
+- name
+- specialization
+- phone
+- photo
+- schedule_id (FK)
+
+2. Schedule (Розклад)
+Атрибути:
+- shcedule_id (PK)
+- date
+- start
+- end
+- is_available
+
+3. Patient (Пацієнт)
+Атрибути:
+- patient_id (PK)
+- name
+- birth_date
+- phone
+- diagnosis_id (FK)
+
+4. Diagnosis (Діагноз)
+Атрибути:
+- diagnosis_id (PK)
+- title
+- description
+- severity_level
+
+5. Medical Record (Медичний Запис)
+Атрибути:
+- medical_rec_id (PK)
+- date
+- notes
+- documents
+- patient_id (FK)
+
+6. Procedure (Процедура)
+Атрибути:
+- procedure_id (PK)
+- title
+- cost
+- duration
+
+7. Session (Сеанс / Прийом)
+Атрибути:
+- session_id (PK)
+- date
+- duration
+- status
+- room_number
+- procedure_id (FK)
+- patient_id (FK)
+- therapist_id (FK)
+
+8. Invoice (Рахунок)
+Атрибути:
+- invoice_id (PK)
+- amount
+- issue_date
+- session_id (FK)
+
+9. Payment (Платіж)
+Атрибути:
+- payment_id (PK)
+- amount
+- payment_date
+- method
+- invoice_id (FK)
 
 
 
