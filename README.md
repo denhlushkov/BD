@@ -57,4 +57,8 @@
 
 9.Пацієнт не може бути записаний на два сеанси, що перетинаються за часом.
 
+<img width="827" height="965" alt="image" src="https://github.com/user-attachments/assets/36086942-55e6-4544-9a1d-2553633baec3" />
+
+
+
 
