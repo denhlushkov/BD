@@ -54,3 +54,25 @@
     * Стовпці: payment_id (PK, Serial), invoice_id (FK -> Invoice, Not Null), amount (Numeric, Not Null), payment_date (Date, Not Null), method (Varchar).
     * Ключове припущення (1-до-багатьох): Відсутність UNIQUE на invoice_id дозволяє реалізувати бізнес-правило "Для одного Рахунку може бути одна або декілька оплат".
     * Обмеження: CHECK (amount > 0) гарантує, що платіж не може бути нульовим або від'ємним.
+
+    Data examples :
+    ------------------
+   
+    
+![5244566677066812589](https://github.com/user-attachments/assets/54088488-2fea-43c4-b9cd-0ac6a0aac9db)
+
+![5244566677066812588](https://github.com/user-attachments/assets/994191f0-d628-4828-a6e3-77253e4ff56f)
+
+![5244566677066812587](https://github.com/user-attachments/assets/a6b87aeb-ecf2-433f-ad86-1161e6be7ac9)
+
+![5244566677066812586](https://github.com/user-attachments/assets/eafc3cba-2473-4b9d-ba31-f9732ab8d7aa)
+
+![5244566677066812585](https://github.com/user-attachments/assets/cbb5536b-dc09-4518-9709-dca41526a7f2)
+
+![5244566677066812584](https://github.com/user-attachments/assets/8077145d-3377-4451-aef2-8b8d0771048b)
+
+![5244566677066812583](https://github.com/user-attachments/assets/f6f50997-8487-452b-9333-05efcbaf0e78)
+
+![5244566677066812581](https://github.com/user-attachments/assets/393e9cc4-4e9e-49ea-9846-1562cf3d2160)
+
+![5244566677066812582](https://github.com/user-attachments/assets/15f40559-e45a-40c5-9947-ce134ff42eaf)
