@@ -32,10 +32,10 @@ INSERT INTO Medical_Record (medical_rec_id, patient_id, notes) VALUES
 (1, 1, 'Patient successfully completed the first stage of rehabilitation.'),
 (2, 2, 'Pain reduction after manual therapy.');
 
-INSERT INTO Invoice (invoice_id, session_id, amount, payment_status) VALUES
-(1, 1, 850.00, 'Pending'),
-(2, 2, 1200.00, 'Paid'),
-(3, 3, 500.00, 'Pending');
+INSERT INTO Invoice (invoice_id, session_id, amount) VALUES
+(1, 1, 850.00),
+(2, 2, 1200.00),
+(3, 3, 500.00);
 
 INSERT INTO Payment (payment_id, invoice_id, amount, method) VALUES
 (1, 2, 1200.00, 'Card'),
