@@ -1,0 +1,22 @@
+INSERT INTO Patient (name, birth_date, phone, diagnosis_id)
+VALUES ('Olena Petrenko', '1990-05-15', '050-123-4567', NULL);
+
+INSERT INTO Session (procedure_id, patient_id, therapist_id, date, duration, status, room_number)
+VALUES (1, 5, 2, '2023-10-25', 60, 'Scheduled', '101B');
+
+SELECT * FROM Patient
+WHERE patient_id = 2;
+
+UPDATE Session
+SET status = 'Completed'
+WHERE session_id = 3;
+
+UPDATE Therapist
+SET phone = '0670001122', specialization = 'Senior Physiotherapist'
+WHERE therapist_id = 1;
+
+INSERT INTO Payment (payment_id, invoice_id, amount, payment_date, method) 
+VLAUES (3, 4, 700, '2025-12-01', Card);
+
+DELETE FROM Payment
+WHERE payment_id = 3;
