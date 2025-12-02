@@ -1,8 +1,23 @@
-INSERT INTO Patient (name, birth_date, phone, diagnosis_id)
-VALUES ('Olena Petrenko', '1990-05-15', '050-123-4567', NULL);
+INSERT INTO Patient (patient_id, name, birth_date, phone, diagnosis_id)
+VALUES (4, 'Olena Petrenko', '1990-05-15', '050-123-4567', NULL);
 
-INSERT INTO Session (procedure_id, patient_id, therapist_id, date, duration, status, room_number)
-VALUES (1, 5, 2, '2023-10-25', 60, 'Scheduled', '101B');
+INSERT INTO Session (session_id, procedure_id, patient_id, therapist_id, date, duration, status, room_number)
+VALUES (4, 1, 4, 2, '2023-10-25', 60, 'Scheduled', '101B');
+
+INSERT into Invoice (invoice_id, session_id, amount, issue_date)
+values (4, 4, 1000, '2025-11-19');
+
+INSERT INTO Payment (payment_id, invoice_id, amount, payment_date, method) 
+VALUES (3, 3, 700, '2025-12-01', 'Card');
+
+INSERT INTO Payment (payment_id, invoice_id, amount, payment_date, method) 
+VALUES (4, 4, 1000, '2025-12-01', 'Card');
+
+insert into therapist (therapist_id, schedule_id, name, specialization, phone)
+values (3, 2, 'Valentyn Ostytenko', 'Manual therapist', '067-775-8484');
+
+insert into medical_record (medical_rec_id, patient_id, date, notes)
+values (3, 4, '2023-10-25', 'appointment missed');
 
 SELECT * FROM Patient
 WHERE patient_id = 2;
@@ -14,9 +29,6 @@ WHERE session_id = 3;
 UPDATE Therapist
 SET phone = '0670001122', specialization = 'Senior Physiotherapist'
 WHERE therapist_id = 1;
-
-INSERT INTO Payment (payment_id, invoice_id, amount, payment_date, method) 
-VLAUES (3, 4, 700, '2025-12-01', Card);
 
 DELETE FROM Payment
 WHERE payment_id = 3;
