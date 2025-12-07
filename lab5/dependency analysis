@@ -38,10 +38,10 @@ patient_id -> diagnosis_id
 Залежність 1:1 через UNIQUE.
 medical_rec_id -> date
 medical_rec_id -> notes
-medical_rec_id -> documents
+medical_rec_id -> photo
 medical_rec_id -> patient_id
 patient_id -> medical_rec_id
-Аналіз: Оскільки patient_id має обмеження UNIQUE, залежність працює в обидва боки. Знаючи пацієнта, ми точно знаємо ID його єдиного запису. Це перетворює patient_id на фактичний первинний ключ цієї таблиці.
+Транзитивність: Patient_id через Session та patient. Виправлено у новій схемі
 
 7. Table: Session
 session_id -> patient_id
@@ -61,7 +61,6 @@ session_id -> invoice_id (Через UNIQUE).
 
 9. Table: Payment
 payment_id -> invoice_id
-payment_id -> amount
 payment_id -> payment_date
 payment_id -> method
-Аналіз: invoice_id тут не UNIQUE (теоретично можна платити частинами). Тому invoice_id НЕ визначає payment_id. Один інвойс може мати багато оплат. Тут все правильно.
+Аналіз: invoice_id тут не UNIQUE (теоретично можна платити частинами). Тому invoice_id НЕ визначає payment_id. Один інвойс може мати багато оплат.
