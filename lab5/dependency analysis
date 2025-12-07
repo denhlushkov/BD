@@ -1,0 +1,67 @@
+1. Table: Schedule
+schedule_id -> date(Знаючи ID, ми знаємо дату)
+schedule_id -> start_time
+schedule_id -> end_time
+schedule_id -> is_available
+Внутрішні залежності: Немає. Час початку не визначає час кінця автоматично (різні слоти можуть мати різну тривалість).
+
+2. Table: Diagnosis
+diagnosis_id -> title
+diagnosis_id -> description
+diagnosis_id -> severity_level
+title -> diagnosis_id (Оскільки title UNIQUE, це потенційний ключ. Знаючи назву, ми знаємо ID). 
+
+3. Table: Procedure
+procedure_id -> title
+procedure_id -> cost (Ціна залежить від процедури)
+procedure_id -> duration (Тривалість залежить від процедури)
+title -> procedure_id (UNIQUE ключ)
+
+4. Table: Therapist
+Тут починаються цікаві залежності.
+therapist_id -> name
+therapist_id -> phone
+therapist_id -> photo
+phone -> therapist_id (Оскільки phone UNIQUE, це потенційний ключ).
+therapist_id -> schedule_id
+Це означає, що лікар жорстко прив'язаний до одного запису розкладу. Це залежність "Лікар визначає свій єдиний слот".
+therapist_id -> specialization
+
+5. Table: Patient
+patient_id -> name
+patient_id -> birth_date
+patient_id -> phone
+phone -> patient_id (UNIQUE ключ)
+patient_id -> diagnosis_id
+
+6. Table: Medical_Record
+Залежність 1:1 через UNIQUE.
+medical_rec_id -> date
+medical_rec_id -> notes
+medical_rec_id -> documents
+medical_rec_id -> patient_id
+patient_id -> medical_rec_id
+Аналіз: Оскільки patient_id має обмеження UNIQUE, залежність працює в обидва боки. Знаючи пацієнта, ми точно знаємо ID його єдиного запису. Це перетворює patient_id на фактичний первинний ключ цієї таблиці.
+
+7. Table: Session
+session_id -> patient_id
+session_id -> therapist_id
+session_id -> date
+session_id -> status
+session_id -> room_number
+session_id -> procedure_id
+session_id -> duration
+
+8. Table: Invoice
+invoice_id -> amount
+invoice_id -> issue_date
+invoice_id -> session_id
+session_id -> invoice_id (Через UNIQUE).
+Танзитивність: invoice_id -> session_id -> procedure_id -> cost.Тут amount залежить від cost процедури транзитивно.
+
+9. Table: Payment
+payment_id -> invoice_id
+payment_id -> amount
+payment_id -> payment_date
+payment_id -> method
+Аналіз: invoice_id тут не UNIQUE (теоретично можна платити частинами). Тому invoice_id НЕ визначає payment_id. Один інвойс може мати багато оплат. Тут все правильно.
