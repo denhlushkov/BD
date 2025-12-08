@@ -27,6 +27,15 @@ model invoice {
   payment    payment[]
 }
 
+model equipment {
+  equipment_id      Int      @id @default(autoincrement())
+  name              String   @db.VarChar(100)
+  manufacturer      String?
+  last_maintenance  DateTime?
+  location          String?
+  session      session[]
+}
+
 model medical_record {
   medical_rec_id Int      @id @default(autoincrement())
   patient_id     Int      @unique
@@ -81,6 +90,7 @@ model session {
   procedure_id Int
   patient_id   Int
   therapist_id Int
+  equipment_id Int
   date         DateTime  @db.Date
   duration     Int
   status       String    @db.VarChar(20)
@@ -89,6 +99,7 @@ model session {
   patient      patient   @relation(fields: [patient_id], references: [patient_id], onDelete: NoAction, onUpdate: NoAction)
   procedure    procedure @relation(fields: [procedure_id], references: [procedure_id], onDelete: NoAction, onUpdate: NoAction)
   therapist    therapist @relation(fields: [therapist_id], references: [therapist_id], onDelete: NoAction, onUpdate: NoAction)
+  equipment    equipment @relation(fields: [equipment_id], references: [equipment_id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model therapist {
@@ -97,7 +108,7 @@ model therapist {
   name           String    @db.VarChar(100)
   specialization String?   @db.VarChar(100)
   phone          String?   @unique @db.VarChar(20)
-  photo          String?
+  /// Видалив photo
   session        session[]
   schedule       schedule? @relation(fields: [schedule_id], references: [schedule_id], onDelete: NoAction, onUpdate: NoAction)
 }
