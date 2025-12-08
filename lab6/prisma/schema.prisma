@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model diagnosis {
+  diagnosis_id   Int       @id @default(autoincrement())
+  title          String    @unique @db.VarChar(150)
+  description    String?
+  severity_level String?   @db.VarChar(50)
+  restore_time   DateTime   @db.Date
+  patient        patient[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model invoice {
+  invoice_id Int       @id @default(autoincrement())
+  session_id Int       @unique
+  amount     Decimal   @db.Decimal(10, 2)
+  issue_date DateTime  @default(dbgenerated("CURRENT_DATE")) @db.Date
+  session    session   @relation(fields: [session_id], references: [session_id], onDelete: NoAction, onUpdate: NoAction)
+  payment    payment[]
+}
+
+model equipment {
+  equipment_id      Int      @id @default(autoincrement())
+  name              String   @db.VarChar(100)
+  manufacturer      String?
+  last_maintenance  DateTime?
+  location          String?
+  session      session[]
+}
+
+model medical_record {
+  medical_rec_id Int      @id @default(autoincrement())
+  patient_id     Int      @unique
+  date           DateTime @default(dbgenerated("CURRENT_DATE")) @db.Date
+  notes          String?
+  documents      String?
+  patient        patient  @relation(fields: [patient_id], references: [patient_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model patient {
+  patient_id     Int             @id @default(autoincrement())
+  diagnosis_id   Int?
+  name           String          @db.VarChar(100)
+  birth_date     DateTime        @db.Date
+  phone          String          @unique @db.VarChar(20)
+  medical_record medical_record?
+  diagnosis      diagnosis?      @relation(fields: [diagnosis_id], references: [diagnosis_id], onDelete: NoAction, onUpdate: NoAction)
+  session        session[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model payment {
+  payment_id   Int      @id @default(autoincrement())
+  invoice_id   Int
+  payment_date DateTime @default(dbgenerated("CURRENT_DATE")) @db.Date
+  method       String?  @db.VarChar(50)
+  invoice      invoice  @relation(fields: [invoice_id], references: [invoice_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model procedure {
+  procedure_id Int       @id @default(autoincrement())
+  title        String    @unique @db.VarChar(150)
+  cost         Decimal   @db.Decimal(10, 2)
+  duration     Int
+  session      session[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model schedule {
+  schedule_id  Int         @id @default(autoincrement())
+  date         DateTime    @db.Date
+  start_time   DateTime    @db.Time(6)
+  end_time     DateTime    @db.Time(6)
+  is_available Boolean     @default(true)
+  therapist    therapist[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model session {
+  session_id   Int       @id @default(autoincrement())
+  procedure_id Int
+  patient_id   Int
+  therapist_id Int
+  equipment_id Int
+  date         DateTime  @db.Date
+  duration     Int
+  status       String    @db.VarChar(20)
+  room_number  String?   @db.VarChar(10)
+  invoice      invoice?
+  patient      patient   @relation(fields: [patient_id], references: [patient_id], onDelete: NoAction, onUpdate: NoAction)
+  procedure    procedure @relation(fields: [procedure_id], references: [procedure_id], onDelete: NoAction, onUpdate: NoAction)
+  therapist    therapist @relation(fields: [therapist_id], references: [therapist_id], onDelete: NoAction, onUpdate: NoAction)
+  equipment    equipment @relation(fields: [equipment_id], references: [equipment_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model therapist {
+  therapist_id   Int       @id @default(autoincrement())
+  schedule_id    Int?
+  name           String    @db.VarChar(100)
+  specialization String?   @db.VarChar(100)
+  phone          String?   @unique @db.VarChar(20)
+  /// Видалив photo
+  session        session[]
+  schedule       schedule? @relation(fields: [schedule_id], references: [schedule_id], onDelete: NoAction, onUpdate: NoAction)
+}
