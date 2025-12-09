@@ -41,7 +41,6 @@ medical_rec_id -> notes
 medical_rec_id -> photo
 medical_rec_id -> patient_id
 patient_id -> medical_rec_id
-Транзитивність: Patient_id через Session та patient. Виправлено у новій схемі
 
 7. Table: Session
 session_id -> patient_id
@@ -57,7 +56,7 @@ invoice_id -> amount
 invoice_id -> issue_date
 invoice_id -> session_id
 session_id -> invoice_id (Через UNIQUE).
-Танзитивність: invoice_id -> session_id -> procedure_id -> cost.Тут amount залежить від cost процедури транзитивно.
+Транзитивність: була пов'язана з amount у invoice та amount у payment. Виправили.
 
 9. Table: Payment
 payment_id -> invoice_id
