@@ -67,24 +67,25 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
-  // 1. Створення нового пацієнта
+
+    // 1. Створення нового запису Patient
     const newPatient = await prisma.patient.create({
         data: {
             name: 'Олеся Коваль',
-            phone: '099-555-4433', // Унікальний телефон
+            phone: '099-555-4433',
             birth_date: new Date('1998-03-20'),
-            diagnosis_id: 1, 
+            diagnosis_id: 1,
         }
     });
 
-    console.log(Створено Пацієнта: ${newPatient.name} (ID: ${newPatient.patient_id}));
+    console.log(`Створено Пацієнта: ${newPatient.name} (ID: ${newPatient.patient_id})`);
 
-    // 2. Створення нового запису Session, що посилається на нового пацієнта
+    // 2. Створення нового запису Session
     const newSession = await prisma.session.create({
         data: {
-            patient_id: newPatient.patient_id, 
-            therapist_id: 1, 
-            procedure_id: 1, 
+            patient_id: newPatient.patient_id,
+            therapist_id: 1,
+            procedure_id: 1,
             date: new Date('2026-01-20'),
             duration: 45,
             status: 'Scheduled',
@@ -92,21 +93,59 @@ async function main() {
         }
     });
 
-    console.log(Створено Сесію: ID ${newSession.session_id} на ${newSession.date.toLocaleDateString()});
+    console.log(`Створено Сесію: ID ${newSession.session_id} на ${newSession.date.toLocaleDateString()}`);
 
-// 3. Зчитування всіх пацієнтів, включаючи їхні сесії
-    const patientsWithSessions = await prisma.patient.findMany({
-        where: { patient_id: newPatient.patient_id }, 
-        include: { sessions: true } 
+    const invoiceAmount = 500.00; 
+
+    // 3. Створення нового рахунку, пов'язаного з сесією
+    const newInvoice = await prisma.invoice.create({
+        data: {
+            session_id: newSession.session_id,
+            amount: invoiceAmount,
+            issue_date: new Date(),
+            payment_status: 'Pending' 
+        }
     });
 
-    console.log(Знайдено пацієнта ${patientsWithSessions[0].name}. Кількість сесій: ${patientsWithSessions[0].sessions.length});
-    console.log(Деталі сесії: ${patientsWithSessions[0].sessions[0].status} на ${patientsWithSessions[0].sessions[0].room_number});
+    console.log(`Створено Рахунок ID ${newInvoice.invoice_id} на суму ${newInvoice.amount}`);
+
+    // 4. Реєстрація оплати за рахунок
+    const newPayment = await prisma.payment.create({
+        data: {
+            invoice_id: newInvoice.invoice_id,
+            amount: invoiceAmount,
+            method: 'Card', 
+        }
+    });
+
+    console.log(`Зареєстровано Оплату ID ${newPayment.payment_id}. Сума: ${newPayment.amount}`);
+
+    // 5. Зчитування пацієнта, включаючи їхні сесії, рахунки та оплати (для повної перевірки ланцюжка)
+    const patientDetails = await prisma.patient.findMany({
+        where: { patient_id: newPatient.patient_id },
+        include: { 
+            sessions: {
+                include: { 
+                    invoice: {
+                        include: { payments: true }
+                    }
+                }
+            } 
+        }
+    });
+    
+    const sessionDetails = patientDetails[0].sessions[0];
+
+    console.log(`Знайдено пацієнта ${patientDetails[0].name}. Кількість сесій: ${patientDetails[0].sessions.length}`);
+    console.log(`Деталі сесії: ${sessionDetails.status} у кімнаті ${sessionDetails.room_number}`);
+    console.log(`Статус оплати: ${sessionDetails.invoice.payment_status} (Платежів: ${sessionDetails.invoice.payments.length})`);
+    
 }
 
+// Виклик основної функції та обробка завершення
 main()
     .catch(e => {
-        console.error("Помилка виконання скрипту Prisma:", e);
+        console.error("Помилка виконання скрипту Prisma:", e.message); 
     })
     .finally(async () => {
         await prisma.$disconnect();
